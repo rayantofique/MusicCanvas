@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class DrawingScript : MonoBehaviour {
 
@@ -11,8 +12,8 @@ public class DrawingScript : MonoBehaviour {
 	public GameObject LineRendererSystemNote;
 	public TrailRenderer trail;
 
-	private Vector3 startPositionNote;
-	private Vector3 endPositionNote;
+	//private Vector3 startPositionNote;
+	//private Vector3 endPositionNote;
 
 	private bool flag = false;
 	private GameObject particleNote;
@@ -23,26 +24,25 @@ public class DrawingScript : MonoBehaviour {
 
 	private Vector3 lastActivePoint;
 
-	private Dictionary<Vector3, string> notesInStroke;
+	private Dictionary<int, Eppy.Tuple<Vector3, string>> notesInStroke;
 
-	Vector3 noteStartPos;
-	Vector3 noteEndPos;
+	private Vector3 noteStartPos;
+	private Vector3 noteEndPos;
 
-
-
+	private int noteSceneCount = 0;
 
 
 	// Use this for initialization
 	void Start () {
 
-		notesInStroke = new Dictionary<Vector3, string> ();
+		notesInStroke = new Dictionary<int, Eppy.Tuple<Vector3, string>> ();
 		aud = GetComponent<AudioSource> ();
 		//nodeArray = new List<Vector3> ();
 		lastActivePoint = Vector3.zero;
 		trail = this.GetComponent<TrailRenderer> ();	
 		trail.time = 1f;
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 
@@ -72,6 +72,10 @@ public class DrawingScript : MonoBehaviour {
 
 			//particleNote = GameObject.Instantiate (particleSystemNote, mousePos, Quaternion.identity);
 			//particleNote.GetComponent<FollowNotePath> ().AddPathNode (note.LastNode());
+			Eppy.Tuple<Vector3, string> tuple = new Eppy.Tuple<Vector3, string> (mousePos, "longnote");
+			notesInStroke.Add (noteSceneCount, tuple);
+			noteSceneCount++;
+
 			aud.clip = notes [Mathf.FloorToInt (mousePos.y)];
 			aud.Play ();
 			//print ("workign falsE");
@@ -91,18 +95,36 @@ public class DrawingScript : MonoBehaviour {
 				//nodeArray.Add (mousePos);
 				trail.time = 0;
 			} else {
-
-				note.AddPoint(new Vector3(mousePos.x + 0.2f, mousePos.y, mousePos.z));
+					
+				note.AddPoint(new Vector3(mousePos.x + 0.3f, mousePos.y, mousePos.z));
 			}
 
 
 			//to pass note if pitch and y val does not change
-			if ((int)noteStartPos.y == (int)mousePos.y) {
+			/*if ((int)noteStartPos.y == (int)mousePos.y) {
 
-				string singlePitchNoteString = note.GetNoteString(noteStartPos, mousePos);
-				notesInStroke.Add (noteStartPos, singlePitchNoteString);
-			}
+				/*if (noteEndPos.x < noteStartPos.x) {
 
+					Vector3 temp = noteStartPos;
+					noteStartPos = noteEndPos;
+					noteEndPos = temp;
+				}
+
+				//float timeStart = Mathf.Abs (noteEndPos.x - SettingsManager.instance.CursorStartPos.x) / SettingsManager.instance.cursorSpeed;
+
+
+				
+
+			}*/
+
+
+			/*string noteString = note.GetNoteString(noteStartPos, mousePos); //this should be switched so that parameter is passed according to which instrument selected
+			Eppy.Tuple<Vector3, string> tuple = new Eppy.Tuple<Vector3, string>(noteStartPos, noteString);
+			notesInStroke.Add (noteSceneCount, tuple);
+			noteSceneCount++;*/
+			Eppy.Tuple<Vector3, string> tuple = new Eppy.Tuple<Vector3, string> (note.LastNode (), "longnote");
+			notesInStroke.Add (noteSceneCount, tuple);
+			noteSceneCount++;
 
 			//particleNote.GetComponent<FollowNotePath> ().AddPathNode (note.LastNode());
 			List<Vector3> nodeList = note.getNodes();
@@ -146,7 +168,23 @@ public class DrawingScript : MonoBehaviour {
 				noteEndPos = mousePos;
 				//get string val and pass startPosition + string 
 				string noteString = note.GetNoteString(noteStartPos, noteEndPos);
-				notesInStroke.Add (noteStartPos, noteString);
+
+				//vars I have, startPos, endPos, 
+				/*if (noteEndPos.x < noteStartPos.x) {
+
+					Vector3 temp = noteStartPos;
+					noteStartPos = noteEndPos;
+					noteEndPos = temp;
+				}
+
+				float timeStart = Mathf.Abs (noteEndPos.x - SettingsManager.instance.CursorStartPos.x) / SettingsManager.instance.cursorSpeed;*/
+
+				//d/s
+
+				Eppy.Tuple<Vector3, string> tuple = new Eppy.Tuple<Vector3, string>(noteStartPos, noteString);
+
+				notesInStroke.Add (noteSceneCount, tuple);
+				noteSceneCount++;
 				noteStartPos = mousePos;
 				noteEndPos = Vector3.zero;
 
@@ -206,7 +244,7 @@ public class DrawingScript : MonoBehaviour {
 	}
 
 
-	public AudioClip AssignNote(int button)
+	/*public AudioClip AssignNote(int button)
 	{
 		
 		Vector3 mousePos = Camera.main.ScreenToWorldPoint (Input.mousePosition);
@@ -221,7 +259,7 @@ public class DrawingScript : MonoBehaviour {
 			return notes [Mathf.FloorToInt (mousePos.y) + 12];
 		}
 			
-	}
+	}*/
 
 
 	

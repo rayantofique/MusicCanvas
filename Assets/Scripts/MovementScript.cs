@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class MovementScript : MonoBehaviour {
 
-	public int speed;
+	public float speed;
 	private Vector3 startPos;
 
 	// Use this for initialization
 	void Start () {
 
-		startPos = transform.position;
+		speed = SettingsManager.instance.cursorSpeed;
+		startPos = SettingsManager.instance.CursorStartPos;
 
 	}
 	
@@ -19,7 +20,8 @@ public class MovementScript : MonoBehaviour {
 
 		if (Input.GetKeyDown (KeyCode.Space)) {
 			transform.position = startPos;
-			speed = 3;
+
+
 		}
 		Vector3 pos = transform.position;
 		pos.x += speed * Time.deltaTime;

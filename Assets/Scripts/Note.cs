@@ -31,7 +31,6 @@ public class Note {
 	{
 		int count = points.Count;
 		return points [count - 1];
-
 	}
 
 	public List<Vector3> getNodes()
@@ -41,13 +40,26 @@ public class Note {
 
 	public string GetNoteString(Vector3 noteStartPoint, Vector3 noteEndPoint)
 	{
-		//will reference a static noteDatabase
-		//could be a map with a string, string
-		//if located entry in map is empty, then lift from Resources and add to map, else play from scene
-		float instrument = noteStartPoint.z;
-		float pitch = noteStartPoint.y;
-		float note = Mathf.Abs(noteEndPoint.z - noteStartPoint.z);
+		float instrument = 1;
+		float pitch = (int)noteStartPoint.y;
+		float note = 0;
+		float length = Mathf.Abs(noteEndPoint.x - noteStartPoint.x);
+		if (length >= 0f && length < 1f) {
+
+			note = 1;
+		} else if (length >= 1f && length < 2f) {
+
+			note = 2;
+		} else if (length >= 2f && length < 3f) {
+			note = 3;
+		} else if (length >= 3f && length < 4f) {
+			note = 4;
+		} else if (length >= 4f) {
+			note = 5;
+		}
 		string keyReference = instrument.ToString () + pitch.ToString () + note.ToString ();
-		return keyReference;
+		Debug.Log(keyReference);
+		//return keyReference;
+		return "longnote";
 	}
 }

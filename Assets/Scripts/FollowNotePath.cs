@@ -15,9 +15,7 @@ public class FollowNotePath : MonoBehaviour {
 	ParticleSystem.Particle[] particleList;
 	private Vector3[] newPoints;
 
-	float para = 0;
-	float lerp = 0;
-	private bool particleFlag = false;
+
 
 	float totalDistance = 0;
 
@@ -113,7 +111,6 @@ public class FollowNotePath : MonoBehaviour {
 				//particleList [i].position = newPosition;
 					
 			}
-			particleFlag = false;
 			p.SetParticles(particleList, partCount);
 		}
 
@@ -164,7 +161,7 @@ public class FollowNotePath : MonoBehaviour {
 			totalDistance += directions [i].magnitude;
 		}
 			
-		GetComponent<ParticleSystem> ().startLifetime = 6f;		
+		GetComponent<ParticleSystem> ().startLifetime = 4f;		
 		//GetComponent<ParticleSystem> ().startLifetime = totalDistance * 8f;
 
 
